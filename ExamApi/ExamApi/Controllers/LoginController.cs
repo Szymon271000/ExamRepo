@@ -26,7 +26,7 @@ namespace ExamApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(UserAuthorizeDTO userDto)
+        public async Task<IActionResult> Post(AdminAuthorizeDTO userDto)
         {
             var user = (await _userRepository.GetAll()).FirstOrDefault(x => x.Login == userDto.Login);
             if (user != null && Hashing.CorrectPassword(userDto.Password, user.PasswordHash, user.PasswordSalt))

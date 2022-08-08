@@ -24,7 +24,7 @@ namespace ExamApi.Controllers
         }
 
         [HttpGet]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin, User")]
 
         public async Task<IActionResult> GetAllEducationalMaterial()
         {

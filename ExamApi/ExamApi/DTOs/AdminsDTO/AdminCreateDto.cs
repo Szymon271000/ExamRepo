@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ExamApi.DTOs.UserDTO
+namespace ExamApi.DTOs
 {
-    public class UserCreateDTO
+    public class AdminCreateDto
     {
         [Required]
         [MaxLength(50)]
