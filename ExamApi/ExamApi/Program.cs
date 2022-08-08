@@ -14,6 +14,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
 builder.Services.AddDbContext<CodeCoolContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("ApiConnection")));
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IBaseRepository<MaterialType>, MaterialTypesRepository>();
 builder.Services.AddScoped<IBaseRepository<Author>, AuthorsRepository>();
 builder.Services.AddScoped<IBaseRepository<EducationalMaterial>, EducationalMaterialsRepository>();
