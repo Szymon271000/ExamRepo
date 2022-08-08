@@ -17,12 +17,14 @@ namespace ExamApi.Controllers
     {
         private readonly IBaseRepository<EducationalMaterial> _educationalMaterialRepository;
         private readonly IBaseRepository<MaterialReview> _materialReviewRepository;
+        private readonly IBaseRepository<Author> _authorRepository;
         private readonly IMapper _mapper;
 
-        public EducationalMaterialController(IBaseRepository<EducationalMaterial> educationalMaterialRepository, IBaseRepository<MaterialReview> materialReviewRepository, IMapper mapper)
+        public EducationalMaterialController(IBaseRepository<EducationalMaterial> educationalMaterialRepository, IBaseRepository<MaterialReview> materialReviewRepository, IBaseRepository<Author> authorRepository, IMapper mapper)
         {
             _educationalMaterialRepository = educationalMaterialRepository;
             _materialReviewRepository = materialReviewRepository;
+            _authorRepository = authorRepository;
             _mapper = mapper;
         }
 
@@ -118,5 +120,23 @@ namespace ExamApi.Controllers
             return Ok(_mapper.Map<IEnumerable<SimpleEducationalMaterial>>(filtredList));
         }
 
+
+        [HttpPut("{id}/author/{authorId}")]
+        public async Task<IActionResult> AddAuthorToEducationalMaterial(int id, int authorId)
+        {
+            var educationalMaterial = await _educationalMaterialRepository.GetById(id);
+            if (educationalMaterial == null)
+            {
+                return NotFound();
+            }
+            var author = await _authorRepository.GetById(authorId);
+            if (author == null)
+            {
+                return NotFound();
+            }
+            author.EducationalMaterials.Add(educationalMaterial);
+            await _authorRepository.Update(author);
+            return NoContent();
+        }
     }
 }
