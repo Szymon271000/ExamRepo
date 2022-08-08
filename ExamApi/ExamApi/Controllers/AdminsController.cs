@@ -14,12 +14,14 @@ namespace ExamApi.Controllers
     public class AdminsController : ControllerBase
     {
         private readonly IBaseRepository<User> _userRepository;
+        private readonly IBaseRepository<Role> _roleRepository;
         private readonly IMapper _mapper;
 
-        public AdminsController(IBaseRepository<User> userRepository, IMapper mapper)
+        public AdminsController(IBaseRepository<User> userRepository, IMapper mapper, IBaseRepository<Role> roleRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _roleRepository = roleRepository;
         }
 
         [HttpPost]
@@ -29,9 +31,10 @@ namespace ExamApi.Controllers
             {
                 var userToAdd = _mapper.Map<User>(userDTO);
                 CreatePassword(userDTO.Password, out byte[] passwordHash, out byte[] passwordSalt);
-                userToAdd.Access = Access.Admin;
                 userToAdd.PasswordSalt = passwordSalt;
                 userToAdd.PasswordHash = passwordHash;
+                var role = await _roleRepository.GetById(1);
+                role.Users.Add(userToAdd);
                 await _userRepository.Add(userToAdd);
                 return Ok(_mapper.Map<SimpleUserDTO>(userToAdd));
             }
@@ -43,19 +46,6 @@ namespace ExamApi.Controllers
             HMACSHA512 hmac = new HMACSHA512();
             passwordSalt = hmac.Key;
             passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-        }
-        private bool CorrectPassword(string password, byte[] passwordHash, byte[] passwordSalt)
-        {
-            HMACSHA512 hmac = new HMACSHA512(passwordSalt);
-            byte[] passwordHash2 = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-            for (int i = 0; i < passwordHash.Length; i++)
-            {
-                if (passwordHash[i] != passwordHash2[i])
-                {
-                    return false;
-                }
-            }
-            return true;
         }
     }
 }

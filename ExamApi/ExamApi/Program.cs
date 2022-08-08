@@ -25,6 +25,7 @@ builder.Services.AddScoped<IBaseRepository<Author>, AuthorsRepository>();
 builder.Services.AddScoped<IBaseRepository<EducationalMaterial>, EducationalMaterialsRepository>();
 builder.Services.AddScoped<IBaseRepository<MaterialReview>, MaterialReviewsRepository>();
 builder.Services.AddScoped<IBaseRepository<User>, UsersRepository>();
+builder.Services.AddScoped<IBaseRepository<Role>, RolesRepository>();
 
 
 builder.Services.AddEndpointsApiExplorer();
