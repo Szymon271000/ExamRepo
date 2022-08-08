@@ -31,14 +31,12 @@ namespace Datas.Repositories
 
         public async Task<List<EducationalMaterial>> GetAll()
         {
-            return await _codecoolContext.EducationalMaterials.Include(x => x.author).Include(x=> x.materialType).ToListAsync();
+            return await _codecoolContext.EducationalMaterials.ToListAsync();
         }
 
         public async Task<EducationalMaterial> GetById(int id)
         {
             return await _codecoolContext.EducationalMaterials.
-                Include(x => x.author).
-                Include(x=> x.materialType).
                 FirstOrDefaultAsync(x => x.EducationalMaterialId == id);
         }
 

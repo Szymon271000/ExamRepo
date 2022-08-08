@@ -31,7 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\MaterialReviewDTO\" />
+    <Folder Include="DTOs\ReviewDTO\" />
   </ItemGroup>
 
 </Project>
