@@ -30,8 +30,4 @@
     <ProjectReference Include="..\Datas\Datas.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTOs\ReviewDTO\" />
-  </ItemGroup>
-
 </Project>
