@@ -1,5 +1,6 @@
 ﻿using Datas.Context;
 using Datas.Models;
+using Datas.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -31,14 +32,20 @@ namespace Datas.Repositories
 
         public async Task<List<EducationalMaterial>> GetAll()
         {
-            return await _codecoolContext.EducationalMaterials.ToListAsync();
+            return await _codecoolContext.EducationalMaterials
+                .Include(x => x.author)
+                .Include(x => x.materialType)
+                .ToListAsync();
         }
 
         public async Task<EducationalMaterial> GetById(int id)
         {
             return await _codecoolContext.EducationalMaterials.
-                FirstOrDefaultAsync(x => x.EducationalMaterialId == id);
+                Include(x=> x.author)
+                .Include(x=> x.materialType)
+                .FirstOrDefaultAsync(x => x.EducationalMaterialId == id);
         }
+
 
         public async Task Save()
         {
