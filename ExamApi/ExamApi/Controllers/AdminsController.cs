@@ -2,8 +2,10 @@
 using Datas.Models;
 using Datas.Repositories;
 using ExamApi.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -11,6 +13,7 @@ namespace ExamApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     public class AdminsController : ControllerBase
     {
         private readonly IBaseRepository<User> _userRepository;

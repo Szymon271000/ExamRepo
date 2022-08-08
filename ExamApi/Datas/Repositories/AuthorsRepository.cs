@@ -31,7 +31,11 @@ namespace Datas.Repositories.Interfaces
 
         public async Task<List<Author>> GetAll()
         {
-            return await _codecoolContext.Authors.Include(x => x.EducationalMaterials).ToListAsync();
+            return await _codecoolContext.Authors
+                .Include(x => x.EducationalMaterials)
+                .ThenInclude(x => x.Reviews).
+                ThenInclude(x => x.MaterialReviewDigit)
+                .ToListAsync();
         }
 
         public async Task<Author> GetById(int id)

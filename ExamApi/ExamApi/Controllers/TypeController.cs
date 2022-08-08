@@ -19,12 +19,7 @@ namespace ExamApi.Controllers
             _educationalMaterialRepository = educationalMaterialRepository;
             _mapper = mapper;
         }
-        [HttpGet("EducationalElementsById/{TypeId}")]
-        public async Task<IActionResult> GetAllEducationalMaterialByType(int TypeId)
-        {
-            var educationalMaterials = await _educationalMaterialRepository.GetAll();
-            var filtredList = educationalMaterials.Where(x => x.materialTypeId == TypeId).ToList();
-            return Ok(_mapper.Map<IEnumerable<SimpleEducationalMaterial>>(filtredList));
-        }
+
+
     }
 }
