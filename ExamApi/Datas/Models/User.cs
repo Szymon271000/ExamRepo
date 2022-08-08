@@ -6,18 +6,14 @@ using System.Threading.Tasks;
 
 namespace Datas.Models
 {
-    public enum Access
-    {
-        Admin,
-        User
-    }
+
     public class User
     {
         public int UserId { get; set; }
 
-        public Access ?Access { get; set; }
         public string? Login { get; set; }
-        public string? Password { get; set; }
+
+        public List<Role> Roles { get; set; }
         public byte[]? PasswordHash { get; set; }
         public byte[]? PasswordSalt { get; set; }
     }

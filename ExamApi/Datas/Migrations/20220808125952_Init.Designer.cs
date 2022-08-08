@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Datas.Migrations
 {
     [DbContext(typeof(CodeCoolContext))]
-    [Migration("20220808122245_Init")]
+    [Migration("20220808125952_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -241,6 +241,35 @@ namespace Datas.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Datas.Models.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "User"
+                        });
+                });
+
             modelBuilder.Entity("Datas.Models.User", b =>
                 {
                     b.Property<int>("UserId")
@@ -249,13 +278,7 @@ namespace Datas.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"), 1L, 1);
 
-                    b.Property<int?>("Access")
-                        .HasColumnType("int");
-
                     b.Property<string>("Login")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("PasswordHash")
@@ -267,6 +290,21 @@ namespace Datas.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("RoleUser", b =>
+                {
+                    b.Property<int>("RolesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsersUserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("RolesId", "UsersUserId");
+
+                    b.HasIndex("UsersUserId");
+
+                    b.ToTable("RoleUser");
                 });
 
             modelBuilder.Entity("Datas.Models.EducationalMaterial", b =>
@@ -294,6 +332,21 @@ namespace Datas.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("educationalMaterial");
+                });
+
+            modelBuilder.Entity("RoleUser", b =>
+                {
+                    b.HasOne("Datas.Models.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RolesId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Datas.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Datas.Models.Author", b =>

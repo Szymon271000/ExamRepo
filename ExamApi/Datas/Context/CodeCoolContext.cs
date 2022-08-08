@@ -16,6 +16,7 @@ namespace Datas.Context
         public DbSet<MaterialReview> MaterialReviews { get; set; }
         public DbSet<MaterialType> MaterialTypes { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -48,6 +49,10 @@ namespace Datas.Context
                 new EducationalMaterial { EducationalMaterialId = 2, Title = "SecondOne",authorId = 2, Description = "Second material", Location = "codecoolʼs library at Slusarska 9", materialTypeId = 2 },
                 new EducationalMaterial { EducationalMaterialId = 3, Title = "ThirdOne",authorId = 3, Description = "Third material", Location = "codecoolʼs library at Slusarska 9", materialTypeId = 3 },
                 new EducationalMaterial { EducationalMaterialId = 4, Title = "FourhOne",authorId = 4, Description = "Fourth material", Location = "codecoolʼs library at Slusarska 9", materialTypeId = 4 }
+                );
+            modelBuilder.Entity<Role>().HasData(
+                new Role { Id = 1, Name = "Admin"},
+                new Role { Id = 2, Name = "User"}
                 );
         }
     }

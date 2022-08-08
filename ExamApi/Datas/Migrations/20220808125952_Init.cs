@@ -39,14 +39,25 @@ namespace Datas.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Roles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Roles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Access = table.Column<int>(type: "int", nullable: true),
                     Login = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
                 },
@@ -81,6 +92,30 @@ namespace Datas.Migrations
                         column: x => x.materialTypeId,
                         principalTable: "MaterialTypes",
                         principalColumn: "MaterialTypeId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RoleUser",
+                columns: table => new
+                {
+                    RolesId = table.Column<int>(type: "int", nullable: false),
+                    UsersUserId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoleUser", x => new { x.RolesId, x.UsersUserId });
+                    table.ForeignKey(
+                        name: "FK_RoleUser_Roles_RolesId",
+                        column: x => x.RolesId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_RoleUser_Users_UsersUserId",
+                        column: x => x.UsersUserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -128,6 +163,15 @@ namespace Datas.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Admin" },
+                    { 2, "User" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "EducationalMaterials",
                 columns: new[] { "EducationalMaterialId", "Description", "Location", "Title", "authorId", "materialTypeId" },
                 values: new object[,]
@@ -163,6 +207,11 @@ namespace Datas.Migrations
                 name: "IX_MaterialReviews_educationalMaterialId",
                 table: "MaterialReviews",
                 column: "educationalMaterialId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoleUser_UsersUserId",
+                table: "RoleUser",
+                column: "UsersUserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -171,10 +220,16 @@ namespace Datas.Migrations
                 name: "MaterialReviews");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "RoleUser");
 
             migrationBuilder.DropTable(
                 name: "EducationalMaterials");
+
+            migrationBuilder.DropTable(
+                name: "Roles");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Authors");

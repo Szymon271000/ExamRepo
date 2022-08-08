@@ -31,7 +31,7 @@ namespace Datas.Repositories
 
         public async Task<List<User>> GetAll()
         {
-            return await _codecoolContext.Users.ToListAsync();
+            return await _codecoolContext.Users.Include(x => x.Roles).ToListAsync();
         }
 
         public async Task<User> GetById(int id)
