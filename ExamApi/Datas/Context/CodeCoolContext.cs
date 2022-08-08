@@ -38,7 +38,7 @@ namespace Datas.Context
                 new Author { AuthorId = 1, AuthorName ="Willy", Description = "New author" }
                 );
             modelBuilder.Entity<EducationalMaterial>().HasData(
-                new EducationalMaterial { EducationalMaterialId = 1, authorId = 1, Description = "First material", Location = "codecoolʼs library at Slusarska 9", materialTypeId = 1 }
+                new EducationalMaterial { EducationalMaterialId = 1, Title = "FirstOne",authorId = 1, Description = "First material", Location = "codecoolʼs library at Slusarska 9", materialTypeId = 1 }
                 );
         }
     }
