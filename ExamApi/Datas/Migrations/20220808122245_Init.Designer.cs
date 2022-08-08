@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Datas.Migrations
 {
     [DbContext(typeof(CodeCoolContext))]
-    [Migration("20220808102508_Init")]
+    [Migration("20220808122245_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,6 +51,24 @@ namespace Datas.Migrations
                             AuthorId = 1,
                             AuthorName = "Willy",
                             Description = "New author"
+                        },
+                        new
+                        {
+                            AuthorId = 2,
+                            AuthorName = "Bobby",
+                            Description = "New author2"
+                        },
+                        new
+                        {
+                            AuthorId = 3,
+                            AuthorName = "Jack",
+                            Description = "New author3"
+                        },
+                        new
+                        {
+                            AuthorId = 4,
+                            AuthorName = "Harry",
+                            Description = "New author4"
                         });
                 });
 
@@ -91,8 +109,36 @@ namespace Datas.Migrations
                             EducationalMaterialId = 1,
                             Description = "First material",
                             Location = "codecoolʼs library at Slusarska 9",
+                            Title = "FirstOne",
                             authorId = 1,
                             materialTypeId = 1
+                        },
+                        new
+                        {
+                            EducationalMaterialId = 2,
+                            Description = "Second material",
+                            Location = "codecoolʼs library at Slusarska 9",
+                            Title = "SecondOne",
+                            authorId = 2,
+                            materialTypeId = 2
+                        },
+                        new
+                        {
+                            EducationalMaterialId = 3,
+                            Description = "Third material",
+                            Location = "codecoolʼs library at Slusarska 9",
+                            Title = "ThirdOne",
+                            authorId = 3,
+                            materialTypeId = 3
+                        },
+                        new
+                        {
+                            EducationalMaterialId = 4,
+                            Description = "Fourth material",
+                            Location = "codecoolʼs library at Slusarska 9",
+                            Title = "FourhOne",
+                            authorId = 4,
+                            materialTypeId = 4
                         });
                 });
 
@@ -126,6 +172,27 @@ namespace Datas.Migrations
                             MaterialReviewDescription = "I like the content but author has terrible accent",
                             MaterialReviewDigit = 2f,
                             educationalMaterialId = 1
+                        },
+                        new
+                        {
+                            MaterialReviewId = 2,
+                            MaterialReviewDescription = "Good content",
+                            MaterialReviewDigit = 8f,
+                            educationalMaterialId = 2
+                        },
+                        new
+                        {
+                            MaterialReviewId = 3,
+                            MaterialReviewDescription = "Bad content",
+                            MaterialReviewDigit = 1f,
+                            educationalMaterialId = 3
+                        },
+                        new
+                        {
+                            MaterialReviewId = 4,
+                            MaterialReviewDescription = "Normal content",
+                            MaterialReviewDigit = 6f,
+                            educationalMaterialId = 4
                         });
                 });
 

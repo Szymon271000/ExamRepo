@@ -108,7 +108,13 @@ namespace Datas.Migrations
             migrationBuilder.InsertData(
                 table: "Authors",
                 columns: new[] { "AuthorId", "AuthorName", "Description", "EducationalMaterialsCounter" },
-                values: new object[] { 1, "Willy", "New author", null });
+                values: new object[,]
+                {
+                    { 1, "Willy", "New author", null },
+                    { 2, "Bobby", "New author2", null },
+                    { 3, "Jack", "New author3", null },
+                    { 4, "Harry", "New author4", null }
+                });
 
             migrationBuilder.InsertData(
                 table: "MaterialTypes",
@@ -124,12 +130,24 @@ namespace Datas.Migrations
             migrationBuilder.InsertData(
                 table: "EducationalMaterials",
                 columns: new[] { "EducationalMaterialId", "Description", "Location", "Title", "authorId", "materialTypeId" },
-                values: new object[] { 1, "First material", "codecoolʼs library at Slusarska 9", null, 1, 1 });
+                values: new object[,]
+                {
+                    { 1, "First material", "codecoolʼs library at Slusarska 9", "FirstOne", 1, 1 },
+                    { 2, "Second material", "codecoolʼs library at Slusarska 9", "SecondOne", 2, 2 },
+                    { 3, "Third material", "codecoolʼs library at Slusarska 9", "ThirdOne", 3, 3 },
+                    { 4, "Fourth material", "codecoolʼs library at Slusarska 9", "FourhOne", 4, 4 }
+                });
 
             migrationBuilder.InsertData(
                 table: "MaterialReviews",
                 columns: new[] { "MaterialReviewId", "MaterialReviewDescription", "MaterialReviewDigit", "educationalMaterialId" },
-                values: new object[] { 1, "I like the content but author has terrible accent", 2f, 1 });
+                values: new object[,]
+                {
+                    { 1, "I like the content but author has terrible accent", 2f, 1 },
+                    { 2, "Good content", 8f, 2 },
+                    { 3, "Bad content", 1f, 3 },
+                    { 4, "Normal content", 6f, 4 }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_EducationalMaterials_authorId",
