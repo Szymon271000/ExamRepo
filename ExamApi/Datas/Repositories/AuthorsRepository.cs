@@ -33,8 +33,6 @@ namespace Datas.Repositories.Interfaces
         {
             return await _codecoolContext.Authors
                 .Include(x => x.EducationalMaterials)
-                .ThenInclude(x => x.Reviews).
-                ThenInclude(x => x.MaterialReviewDigit)
                 .ToListAsync();
         }
 
@@ -42,8 +40,6 @@ namespace Datas.Repositories.Interfaces
         {
             return await _codecoolContext.Authors.
                 Include(x => x.EducationalMaterials)
-                .ThenInclude(x=> x.Reviews).
-                ThenInclude(x=> x.MaterialReviewDigit)
                 .FirstOrDefaultAsync(x => x.AuthorId == id);
         }
 
