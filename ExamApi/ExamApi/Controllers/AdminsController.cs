@@ -2,6 +2,7 @@
 using Datas.Models;
 using Datas.Repositories;
 using ExamApi.DTOs;
+using ExamApi.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -33,10 +34,11 @@ namespace ExamApi.Controllers
             if (ModelState.IsValid)
             {
                 var userToAdd = _mapper.Map<User>(userDTO);
-                CreatePassword(userDTO.Password, out byte[] passwordHash, out byte[] passwordSalt);
+                Hashing.CreatePassword(userDTO.Password, out byte[] passwordHash, out byte[] passwordSalt);
                 userToAdd.PasswordSalt = passwordSalt;
                 userToAdd.PasswordHash = passwordHash;
-                var role = await _roleRepository.GetById(1);
+                int adminsRoleId = 1;
+                var role = await _roleRepository.GetById(adminsRoleId);
                 role.Users.Add(userToAdd);
                 await _userRepository.Add(userToAdd);
                 return Ok(_mapper.Map<SimpleUserDTO>(userToAdd));
@@ -44,11 +46,6 @@ namespace ExamApi.Controllers
             return this.BadRequest("The login must have at least 3 character and the password 10.");
         }
 
-        private void CreatePassword(string password, out byte[] passwordHash, out byte[] passwordSalt)
-        {
-            HMACSHA512 hmac = new HMACSHA512();
-            passwordSalt = hmac.Key;
-            passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-        }
+
     }
 }

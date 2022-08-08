@@ -1,6 +1,7 @@
 ﻿using Datas.Models;
 using Datas.Repositories;
 using ExamApi.DTOs.UserDTO;
+using ExamApi.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -28,7 +29,7 @@ namespace ExamApi.Controllers
         public async Task<IActionResult> Post(UserAuthorizeDTO userDto)
         {
             var user = (await _userRepository.GetAll()).FirstOrDefault(x => x.Login == userDto.Login);
-            if (user != null && CorrectPassword(userDto.Password, user.PasswordHash, user.PasswordSalt))
+            if (user != null && Hashing.CorrectPassword(userDto.Password, user.PasswordHash, user.PasswordSalt))
             {
 
                 var claims = new List<Claim> {
@@ -59,21 +60,6 @@ namespace ExamApi.Controllers
             {
                 return Unauthorized("Invalid credentials");
             }
-        }
-
-
-        private bool CorrectPassword(string password, byte[] passwordHash, byte[] passwordSalt)
-        {
-            HMACSHA512 hmac = new HMACSHA512(passwordSalt);
-            byte[] passwordHash2 = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-            for (int i = 0; i < passwordHash.Length; i++)
-            {
-                if (passwordHash[i] != passwordHash2[i])
-                {
-                    return false;
-                }
-            }
-            return true;
         }
     }
 }
