@@ -5,11 +5,14 @@ using ExamApi.DTOs.ReviewDTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using System.Web.Http.Cors;
 
 namespace ExamApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors(origins: "http://mywebclient.azurewebsites.net", headers: "*", methods: "*")]
+
     public class ReviewsController : ControllerBase
     {
         private readonly IBaseRepository<MaterialReview> _materialRepository;

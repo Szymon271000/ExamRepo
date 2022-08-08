@@ -5,11 +5,14 @@ using ExamApi.DTOs.EducationalMaterialDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Web.Http.Cors;
 
 namespace ExamApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors(origins: "http://mywebclient.azurewebsites.net", headers: "*", methods: "*")]
+
     public class EducationalMaterialController : ControllerBase
     {
         private readonly IBaseRepository<EducationalMaterial> _educationalMaterialRepository;
@@ -105,7 +108,7 @@ namespace ExamApi.Controllers
         }
 
 
-        [HttpGet("EducationalElementsForGivenAuthor{authorId}")]
+        [HttpGet("EducationalElementsForGivenAuthor/{authorId}")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
 
         public async Task<IActionResult> GetAllMaterialsForGivenAuthor(int authorId)
@@ -114,5 +117,6 @@ namespace ExamApi.Controllers
             var filtredList = educationalMaterials.Where(x => x.authorId == authorId).ToList();
             return Ok(_mapper.Map<IEnumerable<SimpleEducationalMaterial>>(filtredList));
         }
+
     }
 }

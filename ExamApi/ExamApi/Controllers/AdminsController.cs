@@ -9,12 +9,15 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
+using System.Web.Http.Cors;
 
 namespace ExamApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+    [EnableCors(origins: "http://mywebclient.azurewebsites.net", headers: "*", methods: "*")]
+
     public class AdminsController : ControllerBase
     {
         private readonly IBaseRepository<User> _userRepository;

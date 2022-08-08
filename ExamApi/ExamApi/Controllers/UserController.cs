@@ -5,11 +5,13 @@ using ExamApi.DTOs.UserDTO;
 using ExamApi.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Web.Http.Cors;
 
 namespace ExamApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors(origins: "http://mywebclient.azurewebsites.net", headers: "*", methods: "*")]
     public class UserController : ControllerBase
     {
         private readonly IBaseRepository<User> _userRepository;
