@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Datas.Models;
 using Datas.Repositories;
+using Datas.Repositories.Interfaces;
 using ExamApi.DTOs.AuthorDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,14 +15,12 @@ namespace ExamApi.Controllers
 
     public class AuthorsController : ControllerBase
     {
-        private readonly IBaseRepository<Author> _authorRepository;
-        private readonly IBaseRepository<EducationalMaterial> _educationalMaterialRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public AuthorsController(IBaseRepository<Author> authorRepository, IBaseRepository<EducationalMaterial> educationalMaterialRepository, IMapper mapper)
+        public AuthorsController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _authorRepository = authorRepository;
-            _educationalMaterialRepository = educationalMaterialRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
@@ -29,7 +28,7 @@ namespace ExamApi.Controllers
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin, User")]
         public async Task<IActionResult> GetAllAuthors()
         {
-            var authors = await _authorRepository.GetAll();
+            var authors = await _unitOfWork.AuthorsRepository.GetAll();
             return Ok(_mapper.Map<IEnumerable<SimpleAuthorDTO>>(authors));
         }
 
@@ -37,18 +36,29 @@ namespace ExamApi.Controllers
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> AddAuthorToEducationalMaterial(int id, int authorId)
         {
-            var educationalMaterial = await _educationalMaterialRepository.GetById(id);
+            var educationalMaterial = await _unitOfWork.EducationalMaterialRepository.GetById(id);
             if (educationalMaterial == null)
             {
                 return NotFound();
             }
-            var author = await _authorRepository.GetById(authorId);
+            var author = await _unitOfWork.AuthorsRepository.GetById(authorId);
             if (author == null)
             {
                 return NotFound();
             }
+            
+            if (educationalMaterial.author != null)
+            {
+                educationalMaterial.author.EducationalMaterialsCounter -= 1;
+                if (educationalMaterial.author.EducationalMaterialsCounter == 0)
+                {
+                    educationalMaterial.author.EducationalMaterialsCounter = 0;
+                }
+            }
             author.EducationalMaterials.Add(educationalMaterial);
-            await _authorRepository.Update(author);
+            int amount = author.EducationalMaterials.Count;
+            author.EducationalMaterialsCounter = amount;
+            await _unitOfWork.AuthorsRepository.Update(author);
             return NoContent();
         }
     }

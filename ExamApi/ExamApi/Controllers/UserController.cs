@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Datas.Models;
 using Datas.Repositories;
+using Datas.Repositories.Interfaces;
 using ExamApi.DTOs.UserDTO;
 using ExamApi.Utils;
 using Microsoft.AspNetCore.Mvc;
@@ -13,15 +14,13 @@ namespace ExamApi.Controllers
     [EnableCors(origins: "http://mywebclient.azurewebsites.net", headers: "*", methods: "*")]
     public class UserController : ControllerBase
     {
-        private readonly IBaseRepository<User> _userRepository;
-        private readonly IBaseRepository<Role> _roleRepository;
         private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UserController(IBaseRepository<User> userRepository, IMapper mapper, IBaseRepository<Role> roleRepository)
+        public UserController(IUnitOfWork unitOfWork,IMapper mapper)
         {
-            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _roleRepository = roleRepository;
         }
 
         [HttpPost]
@@ -34,9 +33,9 @@ namespace ExamApi.Controllers
                 userToAdd.PasswordSalt = passwordSalt;
                 userToAdd.PasswordHash = passwordHash;
                 int userRoleId = 2;
-                var role = await _roleRepository.GetById(userRoleId);
+                var role = await _unitOfWork.RoleRepository.GetById(userRoleId);
                 role.Users.Add(userToAdd);
-                await _userRepository.Add(userToAdd);
+                await _unitOfWork.UserRepository.Add(userToAdd);
                 return Ok(_mapper.Map<SimpleUserDTO>(userToAdd));
             }
             return this.BadRequest("The login must have at least 3 character and the password 10.");

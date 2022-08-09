@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Datas.Models;
 using Datas.Repositories;
+using Datas.Repositories.Interfaces;
 using ExamApi.DTOs.EducationalMaterialDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,16 +15,12 @@ namespace ExamApi.Controllers
 
     public class EducationalMaterialController : ControllerBase
     {
-        private readonly IBaseRepository<EducationalMaterial> _educationalMaterialRepository;
-        private readonly IBaseRepository<MaterialReview> _reviewRepository;
-        private readonly IBaseRepository<MaterialReview> _materialReviewRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public EducationalMaterialController(IBaseRepository<EducationalMaterial> educationalMaterialRepository, IBaseRepository<MaterialReview> reviewRepository, IBaseRepository<MaterialReview> materialReviewRepository, IMapper mapper)
+        public EducationalMaterialController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _educationalMaterialRepository = educationalMaterialRepository;
-            _reviewRepository = reviewRepository;
-            _materialReviewRepository = materialReviewRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
@@ -32,7 +29,7 @@ namespace ExamApi.Controllers
 
         public async Task<IActionResult> GetAllEducationalMaterial()
         {
-            var educationalMaterials = await _educationalMaterialRepository.GetAll();
+            var educationalMaterials = await _unitOfWork.EducationalMaterialRepository.GetAll();
             return Ok(_mapper.Map<IEnumerable<SimpleEducationalMaterial>>(educationalMaterials));
         }
 
@@ -42,7 +39,7 @@ namespace ExamApi.Controllers
 
         public async Task<IActionResult> GetEducationalMaterialById(int id)
         {
-            var educationalMaterial = await _educationalMaterialRepository.GetById(id);
+            var educationalMaterial = await _unitOfWork.EducationalMaterialRepository.GetById(id);
             if (educationalMaterial == null)
             {
                 return this.NotFound("This educational material does not exist");
@@ -58,7 +55,7 @@ namespace ExamApi.Controllers
             if (ModelState.IsValid)
             {
                 var educationalMaterialToAdd = _mapper.Map<EducationalMaterial>(eduDTO);
-                await _educationalMaterialRepository.Add(educationalMaterialToAdd);
+                await _unitOfWork.EducationalMaterialRepository.Add(educationalMaterialToAdd);
                 return Ok(_mapper.Map<SimpleEducationalMaterial>(educationalMaterialToAdd));
             }
             return this.BadRequest("Every field is required and must have min 3 characters and max 20");
@@ -69,13 +66,13 @@ namespace ExamApi.Controllers
 
         public async Task<IActionResult> UpdateEducationalMaterial(int id, EducationalMaterialToUpdateDTO eduDTO)
         {
-            var educationalMaterialToUpdate = await _educationalMaterialRepository.GetById(id);
+            var educationalMaterialToUpdate = await _unitOfWork.EducationalMaterialRepository.GetById(id);
             if (educationalMaterialToUpdate == null)
             {
                 return this.NotFound("This material does not exist");
             }
             _mapper.Map(eduDTO, educationalMaterialToUpdate);
-            await _educationalMaterialRepository.Update(educationalMaterialToUpdate);
+            await _unitOfWork.EducationalMaterialRepository.Update(educationalMaterialToUpdate);
             return NoContent();
         }
 
@@ -83,10 +80,10 @@ namespace ExamApi.Controllers
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> Remove(int id)
         {
-            var result = await _educationalMaterialRepository.GetById(id);
+            var result = await _unitOfWork.EducationalMaterialRepository.GetById(id);
             if (result == null) return NotFound();
 
-            var MaterialswithResult = await _materialReviewRepository.GetAll();
+            var MaterialswithResult = await _unitOfWork.MaterialReviewRepository.GetAll();
             foreach (var item in MaterialswithResult)
             {
                 if (item.educationalMaterialId == result.EducationalMaterialId)
@@ -94,7 +91,7 @@ namespace ExamApi.Controllers
                     item.educationalMaterialId = null;
                 }
             }
-            await _educationalMaterialRepository.Delete(result);
+            await _unitOfWork.EducationalMaterialRepository.Delete(result);
             return NoContent();
         }
 
@@ -103,7 +100,7 @@ namespace ExamApi.Controllers
 
         public async Task<IActionResult> GetAllEducationalMaterialByType(int TypeId)
         {
-            var educationalMaterials = await _educationalMaterialRepository.GetAll();
+            var educationalMaterials = await _unitOfWork.EducationalMaterialRepository.GetAll();
             var filtredList = educationalMaterials.Where(x => x.materialTypeId == TypeId).ToList();
             return Ok(_mapper.Map<IEnumerable<SimpleEducationalMaterial>>(filtredList));
         }
@@ -114,27 +111,27 @@ namespace ExamApi.Controllers
 
         public async Task<IActionResult> GetAllMaterialsForGivenAuthor(int authorId)
         {
-            var educationalMaterials = await _educationalMaterialRepository.GetAll();
+            var educationalMaterials = await _unitOfWork.EducationalMaterialRepository.GetAll();
             var filtredList = educationalMaterials.Where(x => x.authorId == authorId).ToList();
             return Ok(_mapper.Map<IEnumerable<SimpleEducationalMaterial>>(filtredList));
         }
 
         [HttpPut("{id}/review/{reviewId}")]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin, User")]
         public async Task<IActionResult> AddReviewToEducationalMaterial(int id, int reviewId)
         {
-            var educationalMaterial = await _educationalMaterialRepository.GetById(id);
+            var educationalMaterial = await _unitOfWork.EducationalMaterialRepository.GetById(id);
             if (educationalMaterial == null)
             {
                 return NotFound();
             }
-            var review = await _reviewRepository.GetById(reviewId);
+            var review = await _unitOfWork.MaterialReviewRepository.GetById(reviewId);
             if (review == null)
             {
                 return NotFound();
             }
             educationalMaterial.Reviews.Add(review);
-            await _educationalMaterialRepository.Update(educationalMaterial);
+            await _unitOfWork.EducationalMaterialRepository.Update(educationalMaterial);
             return NoContent();
         }
 

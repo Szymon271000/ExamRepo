@@ -1,5 +1,4 @@
 using Datas.Context;
-using Datas.Models;
 using Datas.Repositories;
 using Datas.Repositories.Interfaces;
 using ExamApi;
@@ -7,10 +6,7 @@ using ExamApi.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
-using System.Reflection;
-using System.Security.Cryptography;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,7 +21,8 @@ builder.Services.AddControllers().AddNewtonsoftJson(s =>
 
 builder.Services.AddDbContext<CodeCoolContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("ApiConnection")));
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.AddRepositories();
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.GenerateDocumentation();

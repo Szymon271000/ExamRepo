@@ -5,38 +5,36 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Datas.Repositories
 {
-    public class UsersRepository: IBaseRepository<User>
+    public class UserRepository : GenericRepository<User>, IUserRepository
     {
-        private readonly CodeCoolContext _codecoolContext;
-
-        public UsersRepository(CodeCoolContext context)
+        public UserRepository(CodeCoolContext context) : base(context)
         {
-            _codecoolContext = context;
         }
-        public async Task Add(User entity)
+
+        public override async Task Add(User entity)
         {
             await _codecoolContext.Users.AddAsync(entity);
             await Save();
         }
 
-        public async Task Delete(User entity)
+        public override async Task Delete(User entity)
         {
             _codecoolContext.Users.Remove(entity);
             await Save();
         }
 
-        public async Task<List<User>> GetAll()
+        public override async Task<List<User>> GetAll()
         {
             return await _codecoolContext.Users.Include(x => x.Roles).ToListAsync();
         }
 
-        public async Task<User> GetById(int id)
+        public override async Task<User> GetById(int id)
         {
             return await _codecoolContext.Users
                 .FirstOrDefaultAsync(x => x.UserId == id);
         }
 
-        public async Task Save()
+        public override async Task Save()
         {
             await _codecoolContext.SaveChangesAsync();
         }

@@ -3,48 +3,46 @@ using Datas.Models;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace Datas.Repositories.Interfaces
+namespace Datas.Repositories
 {
-    public class AuthorsRepository : IBaseRepository<Author>
+    public class AuthorsRepository : GenericRepository<Author>, IAuthorsRepository
     {
-        private readonly CodeCoolContext _codecoolContext;
-
-        public AuthorsRepository(CodeCoolContext context)
+        public AuthorsRepository(CodeCoolContext context) : base(context)
         {
-            _codecoolContext = context;
         }
-        public async Task Add(Author entity)
+
+        public override async Task Add(Author entity)
         {
             await _codecoolContext.Authors.AddAsync(entity);
             await Save();
         }
 
-        public async Task Delete(Author entity)
+        public override async Task Delete(Author entity)
         {
             _codecoolContext.Authors.Remove(entity);
             await Save();
         }
 
-        public async Task<List<Author>> GetAll()
+        public override async Task<List<Author>> GetAll()
         {
             return await _codecoolContext.Authors
                 .Include(x => x.EducationalMaterials)
                 .ToListAsync();
         }
 
-        public async Task<Author> GetById(int id)
+        public override async Task<Author> GetById(int id)
         {
             return await _codecoolContext.Authors.
                 Include(x => x.EducationalMaterials)
                 .FirstOrDefaultAsync(x => x.AuthorId == id);
         }
 
-        public async Task Save()
+        public override async Task Save()
         {
             await _codecoolContext.SaveChangesAsync();
         }
 
-        public async Task Update(Author entity)
+        public override async Task Update(Author entity)
         {
             _codecoolContext.Authors.Update(entity);
             await Save();

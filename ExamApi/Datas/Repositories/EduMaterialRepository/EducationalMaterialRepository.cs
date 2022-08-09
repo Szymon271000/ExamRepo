@@ -5,15 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Datas.Repositories
 {
-    public class EducationalMaterialsRepository : IBaseRepository<EducationalMaterial>
+    public class EducationalMaterialRepository : GenericRepository<EducationalMaterial>, IEducationalMaterialRepository
     {
-        private readonly CodeCoolContext _codecoolContext;
-
-        public EducationalMaterialsRepository(CodeCoolContext context)
+        public EducationalMaterialRepository(CodeCoolContext context) : base(context)
         {
-            _codecoolContext = context;
         }
-        public async Task Add(EducationalMaterial entity)
+
+        public override async Task Add(EducationalMaterial entity)
         {
             await _codecoolContext.EducationalMaterials.AddAsync(entity);
             await Save();
@@ -25,31 +23,31 @@ namespace Datas.Repositories
             await Save();
         }
 
-        public async Task<List<EducationalMaterial>> GetAll()
+        public override async Task<List<EducationalMaterial>> GetAll()
         {
             return await _codecoolContext.EducationalMaterials
                 .Include(x => x.author)
                 .Include(x => x.materialType)
-                .Include(x=> x.Reviews)
+                .Include(x => x.Reviews)
                 .ToListAsync();
         }
 
-        public async Task<EducationalMaterial> GetById(int id)
+        public override async Task<EducationalMaterial> GetById(int id)
         {
             return await _codecoolContext.EducationalMaterials.
-                Include(x=> x.author)
-                .Include(x=> x.materialType)
+                Include(x => x.author)
+                .Include(x => x.materialType)
                 .Include(x => x.Reviews)
                 .FirstOrDefaultAsync(x => x.EducationalMaterialId == id);
         }
 
 
-        public async Task Save()
+        public override async Task Save()
         {
             await _codecoolContext.SaveChangesAsync();
         }
 
-        public async Task Update(EducationalMaterial entity)
+        public override async Task Update(EducationalMaterial entity)
         {
             _codecoolContext.EducationalMaterials.Update(entity);
             await Save();

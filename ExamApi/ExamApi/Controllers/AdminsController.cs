@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Datas.Models;
 using Datas.Repositories;
+using Datas.Repositories.Interfaces;
 using ExamApi.DTOs;
 using ExamApi.Utils;
 using Microsoft.AspNetCore.Authorization;
@@ -16,15 +17,13 @@ namespace ExamApi.Controllers
 
     public class AdminsController : ControllerBase
     {
-        private readonly IBaseRepository<User> _userRepository;
-        private readonly IBaseRepository<Role> _roleRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public AdminsController(IBaseRepository<User> userRepository, IMapper mapper, IBaseRepository<Role> roleRepository)
+        public AdminsController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _roleRepository = roleRepository;
         }
 
         [HttpPost]
@@ -37,9 +36,9 @@ namespace ExamApi.Controllers
                 userToAdd.PasswordSalt = passwordSalt;
                 userToAdd.PasswordHash = passwordHash;
                 int adminsRoleId = 1;
-                var role = await _roleRepository.GetById(adminsRoleId);
+                var role = await _unitOfWork.RoleRepository.GetById(adminsRoleId);
                 role.Users.Add(userToAdd);
-                await _userRepository.Add(userToAdd);
+                await _unitOfWork.UserRepository.Add(userToAdd);
                 return Ok(_mapper.Map<SimpleAdminDTO>(userToAdd));
             }
             return this.BadRequest("The login must have at least 3 character and the password 10.");

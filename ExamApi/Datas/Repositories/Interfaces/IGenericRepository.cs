@@ -2,7 +2,7 @@
 
 namespace Datas.Repositories
 {
-    public interface IBaseRepository<T> where T : class
+    public interface IGenericRepository<T> where T : class
     {
         public Task<T> GetById(int id);
         public Task Add(T entity);

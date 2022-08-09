@@ -1,5 +1,6 @@
 ﻿using Datas.Models;
 using Datas.Repositories;
+using Datas.Repositories.Interfaces;
 using ExamApi.DTOs.UserDTO;
 using ExamApi.Utils;
 using Microsoft.AspNetCore.Mvc;
@@ -17,18 +18,19 @@ namespace ExamApi.Controllers
     public class LoginController : ControllerBase
     {
         public IConfiguration _configuration;
-        private readonly IBaseRepository<User> _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public LoginController(IConfiguration configuration, IBaseRepository<User> userRepository)
+
+        public LoginController(IConfiguration configuration, IUnitOfWork unitOfWork)
         {
             _configuration = configuration;
-            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpPost]
         public async Task<IActionResult> Post(AdminAuthorizeDTO userDto)
         {
-            var user = (await _userRepository.GetAll()).FirstOrDefault(x => x.Login == userDto.Login);
+            var user = (await _unitOfWork.UserRepository.GetAll()).FirstOrDefault(x => x.Login == userDto.Login);
             if (user != null && Hashing.CorrectPassword(userDto.Password, user.PasswordHash, user.PasswordSalt))
             {
 
