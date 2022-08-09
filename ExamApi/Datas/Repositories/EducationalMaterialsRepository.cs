@@ -35,6 +35,7 @@ namespace Datas.Repositories
             return await _codecoolContext.EducationalMaterials
                 .Include(x => x.author)
                 .Include(x => x.materialType)
+                .Include(x=> x.Reviews)
                 .ToListAsync();
         }
 
@@ -43,6 +44,7 @@ namespace Datas.Repositories
             return await _codecoolContext.EducationalMaterials.
                 Include(x=> x.author)
                 .Include(x=> x.materialType)
+                .Include(x => x.Reviews)
                 .FirstOrDefaultAsync(x => x.EducationalMaterialId == id);
         }
 

@@ -9,6 +9,6 @@ namespace Datas.Models
 
         public string? DefinitionMaterialType { get; set; }
 
-        public List<EducationalMaterial>? educationalMaterials { get; set; } = new List<EducationalMaterial>();
+        public List<EducationalMaterial>? educationalMaterials { get; set; }
     }
 }

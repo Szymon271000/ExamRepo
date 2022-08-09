@@ -12,7 +12,7 @@ namespace Datas.Models
 
         public string? AuthorName { get; set; }
         public string? Description { get; set; }
-        public List<EducationalMaterial>? EducationalMaterials { get; set; } = new List<EducationalMaterial>();
+        public List<EducationalMaterial>? EducationalMaterials { get; set; }
 
         public int? EducationalMaterialsCounter { get; set; }
     }

@@ -4,7 +4,9 @@ namespace ExamApi.DTOs.ReviewDTO
 {
     public class SimpleReviewDTO
     {
-        public SimpleEducationalMaterial educationalMaterial { get; set; }
+        public int MaterialReviewId { get; set; }
+
+        public string educationalMaterial { get; set; }
 
         public string MaterialReviewDescription { get; set; }
         public float MaterialReviewDigit { get; set; }

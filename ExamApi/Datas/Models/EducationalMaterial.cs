@@ -16,7 +16,7 @@ namespace Datas.Models
         [ForeignKey("MaterialType")]
         public int? materialTypeId { get; set; }
 
-        public List<MaterialReview>? Reviews = new List<MaterialReview>();
+        public List<MaterialReview>? Reviews { get; set; }
 
         public DateTime PublishingDate = DateTime.Now;
 

@@ -17,13 +17,15 @@ namespace ExamApi.Controllers
     public class MaterialTypesController : ControllerBase
     {
         private readonly IBaseRepository<MaterialType> _materialTypeRepository;
+        private readonly IBaseRepository<EducationalMaterial> _educationalMaterialRepository;
         private readonly IMapper _mapper;
 
 
-        public MaterialTypesController(IBaseRepository<MaterialType> materialTypeRepository, IMapper mapper)
+        public MaterialTypesController(IBaseRepository<MaterialType> materialTypeRepository, IBaseRepository<EducationalMaterial> educationalMaterialRepository, IMapper mapper)
         {
             _materialTypeRepository = materialTypeRepository;
             _mapper = mapper;
+            _educationalMaterialRepository = educationalMaterialRepository;
         }
 
         [HttpGet]
@@ -31,6 +33,24 @@ namespace ExamApi.Controllers
         {
             var materialTypes = await _materialTypeRepository.GetAll();
             return Ok(_mapper.Map<IEnumerable<SimpleMaterialTypeDTO>>(materialTypes));
+        }
+
+        [HttpPut("{id}/materialTypes/{educationalMaterialId}")]
+        public async Task<IActionResult> AddTypeToEducationalMaterial(int id, int educationalMaterialId)
+        {
+            var typelMaterial = await _materialTypeRepository.GetById(id);
+            if (typelMaterial == null)
+            {
+                return NotFound();
+            }
+            var educationalMaterial = await _educationalMaterialRepository.GetById(educationalMaterialId);
+            if (educationalMaterial == null)
+            {
+                return NotFound();
+            }
+            typelMaterial.educationalMaterials.Add(educationalMaterial);
+            await _materialTypeRepository.Update(typelMaterial);
+            return NoContent();
         }
     }
 }

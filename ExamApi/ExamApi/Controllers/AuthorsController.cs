@@ -15,11 +15,13 @@ namespace ExamApi.Controllers
     public class AuthorsController : ControllerBase
     {
         private readonly IBaseRepository<Author> _authorRepository;
+        private readonly IBaseRepository<EducationalMaterial> _educationalMaterialRepository;
         private readonly IMapper _mapper;
 
-        public AuthorsController(IBaseRepository<Author> authorRepository, IMapper mapper)
+        public AuthorsController(IBaseRepository<Author> authorRepository, IBaseRepository<EducationalMaterial> educationalMaterialRepository, IMapper mapper)
         {
             _authorRepository = authorRepository;
+            _educationalMaterialRepository = educationalMaterialRepository;
             _mapper = mapper;
         }
 
@@ -28,6 +30,24 @@ namespace ExamApi.Controllers
         {
             var authors = await _authorRepository.GetAll();
             return Ok(_mapper.Map<IEnumerable<SimpleAuthorDTO>>(authors));
+        }
+
+        [HttpPut("{id}/author/{authorId}")]
+        public async Task<IActionResult> AddAuthorToEducationalMaterial(int id, int authorId)
+        {
+            var educationalMaterial = await _educationalMaterialRepository.GetById(id);
+            if (educationalMaterial == null)
+            {
+                return NotFound();
+            }
+            var author = await _authorRepository.GetById(authorId);
+            if (author == null)
+            {
+                return NotFound();
+            }
+            author.EducationalMaterials.Add(educationalMaterial);
+            await _authorRepository.Update(author);
+            return NoContent();
         }
     }
 }

@@ -16,13 +16,15 @@ namespace ExamApi.Controllers
     public class EducationalMaterialController : ControllerBase
     {
         private readonly IBaseRepository<EducationalMaterial> _educationalMaterialRepository;
+        private readonly IBaseRepository<MaterialReview> _reviewRepository;
         private readonly IBaseRepository<MaterialReview> _materialReviewRepository;
         private readonly IBaseRepository<Author> _authorRepository;
         private readonly IMapper _mapper;
 
-        public EducationalMaterialController(IBaseRepository<EducationalMaterial> educationalMaterialRepository, IBaseRepository<MaterialReview> materialReviewRepository, IBaseRepository<Author> authorRepository, IMapper mapper)
+        public EducationalMaterialController(IBaseRepository<EducationalMaterial> educationalMaterialRepository, IBaseRepository<MaterialReview> reviewRepository, IBaseRepository<MaterialReview> materialReviewRepository, IBaseRepository<Author> authorRepository, IMapper mapper)
         {
             _educationalMaterialRepository = educationalMaterialRepository;
+            _reviewRepository = reviewRepository;
             _materialReviewRepository = materialReviewRepository;
             _authorRepository = authorRepository;
             _mapper = mapper;
@@ -120,23 +122,23 @@ namespace ExamApi.Controllers
             return Ok(_mapper.Map<IEnumerable<SimpleEducationalMaterial>>(filtredList));
         }
 
-
-        [HttpPut("{id}/author/{authorId}")]
-        public async Task<IActionResult> AddAuthorToEducationalMaterial(int id, int authorId)
+        [HttpPut("{id}/review/{reviewId}")]
+        public async Task<IActionResult> AddReviewToEducationalMaterial(int id, int reviewId)
         {
             var educationalMaterial = await _educationalMaterialRepository.GetById(id);
             if (educationalMaterial == null)
             {
                 return NotFound();
             }
-            var author = await _authorRepository.GetById(authorId);
-            if (author == null)
+            var review = await _reviewRepository.GetById(reviewId);
+            if (review == null)
             {
                 return NotFound();
             }
-            author.EducationalMaterials.Add(educationalMaterial);
-            await _authorRepository.Update(author);
+            educationalMaterial.Reviews.Add(review);
+            await _educationalMaterialRepository.Update(educationalMaterial);
             return NoContent();
         }
+
     }
 }
