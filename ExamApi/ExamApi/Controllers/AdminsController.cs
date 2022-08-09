@@ -3,6 +3,7 @@ using Datas.Models;
 using Datas.Repositories.Interfaces;
 using ExamApi.DTOs;
 using ExamApi.DTOs.AuthorDTO;
+using ExamApi.DTOs.EducationalMaterialDTO;
 using ExamApi.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -88,7 +89,6 @@ namespace ExamApi.Controllers
         /// <response code="200">Returns all authors</response>
         /// <response code="400">If the item is null</response>
         [HttpGet]
-        //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin, User")]
         public async Task<IActionResult> GetAllAuthorsOrderedByMaterialWritten()
         {
             var authors = await _unitOfWork.AuthorsRepository.GetAll();
