@@ -54,9 +54,9 @@ namespace ExamApi.Controllers
         }
 
         /// <summary>
-        /// Update reviews list of specific material
+        /// Update material list of specific type
         /// </summary>
-        /// <returns>Update reviews list</returns>
+        /// <returns>Update material list</returns>
         /// <param name="id"></param>
         /// <param name="educationalMaterialId"></param>
         /// <remarks>
