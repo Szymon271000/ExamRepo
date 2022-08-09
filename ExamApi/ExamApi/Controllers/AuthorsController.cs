@@ -24,14 +24,58 @@ namespace ExamApi.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Get all authors and with educational materials
+        /// </summary>
+        /// <returns>All authors in DB</returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET
+        ///     {
+        ///        "authorName": "",
+        ///        "description": "",
+        ///        "simpleEducationalMaterials":
+        ///        {
+        ///             "title":"",
+        ///             "description":"",
+        ///             "location":""
+        ///        }
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="200">Returns all authors</response>
+        /// <response code="400">If the item is null</response>
         [HttpGet]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin, User")]
         public async Task<IActionResult> GetAllAuthors()
         {
             var authors = await _unitOfWork.AuthorsRepository.GetAll();
+            if (authors == null)
+            {
+                return this.NotFound("There are no authors in context");
+            }
             return Ok(_mapper.Map<IEnumerable<SimpleAuthorDTO>>(authors));
         }
 
+
+        /// <summary>
+        /// Update list of materials by given author
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="authorId"></param>
+        /// <returns>Update list of materials</returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     {
+        ///        "id": "",
+        ///        "author": "",
+        ///     }
+        /// </remarks>
+        /// <response code="204">No content</response>
+        /// <response code="200">OK</response>
+        /// <response code="400">If the item is null</response>
         [HttpPut("{id}/author/{authorId}")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> AddAuthorToEducationalMaterial(int id, int authorId)
@@ -39,12 +83,12 @@ namespace ExamApi.Controllers
             var educationalMaterial = await _unitOfWork.EducationalMaterialRepository.GetById(id);
             if (educationalMaterial == null)
             {
-                return NotFound();
+                return this.NotFound("There is no educational material with this id");
             }
             var author = await _unitOfWork.AuthorsRepository.GetById(authorId);
             if (author == null)
             {
-                return NotFound();
+                return this.NotFound("There is no author with this id");
             }
             
             if (educationalMaterial.author != null)
