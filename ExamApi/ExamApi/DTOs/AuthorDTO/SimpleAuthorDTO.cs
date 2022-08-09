@@ -8,5 +8,7 @@ namespace ExamApi.DTOs.AuthorDTO
         public string Description { get; set; }
 
         public IEnumerable<SimpleEducationalMaterial> simpleEducationalMaterials { get; set; }
+        public int? EducationalMaterialsCounter { get; set; }
+
     }
 }

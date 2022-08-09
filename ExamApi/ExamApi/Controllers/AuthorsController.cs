@@ -38,7 +38,9 @@ namespace ExamApi.Controllers
         ///             "title":"",
         ///             "description":"",
         ///             "location":""
+        ///          
         ///        }
+        ///        "EducationalMaterialsCounter":""
         ///     }
         ///
         /// </remarks>

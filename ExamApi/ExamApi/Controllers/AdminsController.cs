@@ -2,6 +2,7 @@
 using Datas.Models;
 using Datas.Repositories.Interfaces;
 using ExamApi.DTOs;
+using ExamApi.DTOs.AuthorDTO;
 using ExamApi.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -62,5 +63,41 @@ namespace ExamApi.Controllers
         }
 
 
+        /// <summary>
+        /// Get all authors and with educational materials ordered by materials counter
+        /// </summary>
+        /// <returns>All authors in DB</returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET
+        ///     {
+        ///        "authorName": "",
+        ///        "description": "",
+        ///        "simpleEducationalMaterials":
+        ///        {
+        ///             "title":"",
+        ///             "description":"",
+        ///             "location":""
+        ///          
+        ///        }
+        ///        "EducationalMaterialsCounter":""
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="200">Returns all authors</response>
+        /// <response code="400">If the item is null</response>
+        [HttpGet]
+        //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin, User")]
+        public async Task<IActionResult> GetAllAuthorsOrderedByMaterialWritten()
+        {
+            var authors = await _unitOfWork.AuthorsRepository.GetAll();
+            if (authors == null)
+            {
+                return this.NotFound("There are no authors in context");
+            }
+            var result = authors.OrderByDescending(x => x.EducationalMaterialsCounter).ToList();
+            return Ok(_mapper.Map<IEnumerable<SimpleAuthorDTO>>(result));
+        }
     }
 }
