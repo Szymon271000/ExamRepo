@@ -3,7 +3,6 @@ using Datas.Models;
 using Datas.Repositories;
 using ExamApi.DTOs.UserDTO;
 using ExamApi.Utils;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Web.Http.Cors;
 

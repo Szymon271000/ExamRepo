@@ -4,11 +4,7 @@ using Datas.Repositories;
 using ExamApi.DTOs;
 using ExamApi.Utils;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
-using System.Security.Cryptography;
-using System.Text;
 using System.Web.Http.Cors;
 
 namespace ExamApi.Controllers
