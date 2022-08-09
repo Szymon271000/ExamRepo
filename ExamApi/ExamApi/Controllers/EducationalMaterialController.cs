@@ -2,6 +2,7 @@
 using Datas.Models;
 using Datas.Repositories.Interfaces;
 using ExamApi.DTOs.EducationalMaterialDTO;
+using ExamApi.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Web.Http.Cors;
@@ -275,5 +276,33 @@ namespace ExamApi.Controllers
             return NoContent();
         }
 
+
+
+        /// <summary>
+        /// Get all educational materials paginated
+        /// </summary>
+        /// <param name="serieParameter.PageNumber"></param>
+        /// <param name="serieParameter.PageSize"></param>
+        /// <returns>All series in DB</returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET
+        ///     {
+        ///        "title": "",
+        ///        "description": "",
+        ///        "location":""
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="200">Returns all materials</response>
+        /// <response code="400">If the item is null</response>
+        [HttpGet]
+        [Route("paginate")]
+        public async Task<IActionResult> GetEducationalMaterialsPaginated([FromQuery] SerieParameter serieParameter)
+        {
+            var paginatedSeries = await Pagination.GetSeries(serieParameter, _unitOfWork);
+            return Ok(_mapper.Map<IEnumerable<SimpleEducationalMaterial>>(paginatedSeries));
+        }
     }
 }
