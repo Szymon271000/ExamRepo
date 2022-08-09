@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Datas.Models;
-using Datas.Repositories;
 using Datas.Repositories.Interfaces;
 using ExamApi.DTOs;
 using ExamApi.Utils;

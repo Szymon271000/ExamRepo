@@ -1,6 +1,4 @@
-﻿using Datas.Models;
-using Datas.Repositories;
-using Datas.Repositories.Interfaces;
+﻿using Datas.Repositories.Interfaces;
 using ExamApi.DTOs.UserDTO;
 using ExamApi.Utils;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +25,22 @@ namespace ExamApi.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        /// <summary>
+        /// Receive a JWT Token
+        /// </summary>
+        /// <returns>JWT Token</returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     {
+        ///       "login": "",
+        ///       "password": "",
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="201">Created</response>
+        /// <response code="200">OK</response>
+        /// <response code="400">Bad request</response>
         [HttpPost]
         public async Task<IActionResult> Post(AdminAuthorizeDTO userDto)
         {

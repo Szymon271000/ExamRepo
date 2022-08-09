@@ -23,6 +23,22 @@ namespace ExamApi.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Add new user
+        /// </summary>
+        /// <returns>Add new user</returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     {
+        ///         "login": "",
+        ///         "password": ""
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="201">Created</response>
+        /// <response code="200">OK</response>
+        /// <response code="400">Bad request</response>
         [HttpPost]
         public async Task<IActionResult> Create(UserCreateDTO userDTO)
         {
