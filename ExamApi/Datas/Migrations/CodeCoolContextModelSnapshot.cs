@@ -325,7 +325,7 @@ namespace Datas.Migrations
             modelBuilder.Entity("Datas.Models.MaterialReview", b =>
                 {
                     b.HasOne("Datas.Models.EducationalMaterial", "educationalMaterial")
-                        .WithMany()
+                        .WithMany("Reviews")
                         .HasForeignKey("educationalMaterialId")
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -350,6 +350,11 @@ namespace Datas.Migrations
             modelBuilder.Entity("Datas.Models.Author", b =>
                 {
                     b.Navigation("EducationalMaterials");
+                });
+
+            modelBuilder.Entity("Datas.Models.EducationalMaterial", b =>
+                {
+                    b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("Datas.Models.MaterialType", b =>
