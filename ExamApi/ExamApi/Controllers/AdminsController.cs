@@ -26,7 +26,25 @@ namespace ExamApi.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Add new admin
+        /// </summary>
+        /// <returns>Add new admin</returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     {
+        ///         "login": "string",
+        ///         "password": ""stringstri"
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="201">Created</response>
+        /// <response code="200">OK</response>
+        /// <response code="400">Bad request</response>
+
         [HttpPost]
+        [Route("")]
         public async Task<IActionResult> Create(AdminCreateDto userDTO)
         {
             if (ModelState.IsValid)
