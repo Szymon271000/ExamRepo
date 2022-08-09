@@ -8,7 +8,8 @@ namespace ExamApi.Profiles
     {
         public AuthorProfile()
         {
-            CreateMap<Author, SimpleAuthorDTO>();
+            CreateMap<Author, SimpleAuthorDTO>()
+                                .ForMember(dest => dest.simpleEducationalMaterials, opt => opt.MapFrom(src => src.EducationalMaterials));
         }
     }
 }

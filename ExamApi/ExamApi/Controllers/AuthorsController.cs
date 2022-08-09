@@ -2,6 +2,7 @@
 using Datas.Models;
 using Datas.Repositories;
 using ExamApi.DTOs.AuthorDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Web.Http.Cors;
@@ -26,6 +27,7 @@ namespace ExamApi.Controllers
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin, User")]
         public async Task<IActionResult> GetAllAuthors()
         {
             var authors = await _authorRepository.GetAll();
@@ -33,6 +35,7 @@ namespace ExamApi.Controllers
         }
 
         [HttpPut("{id}/author/{authorId}")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> AddAuthorToEducationalMaterial(int id, int authorId)
         {
             var educationalMaterial = await _educationalMaterialRepository.GetById(id);

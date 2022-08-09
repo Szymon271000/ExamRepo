@@ -18,15 +18,13 @@ namespace ExamApi.Controllers
         private readonly IBaseRepository<EducationalMaterial> _educationalMaterialRepository;
         private readonly IBaseRepository<MaterialReview> _reviewRepository;
         private readonly IBaseRepository<MaterialReview> _materialReviewRepository;
-        private readonly IBaseRepository<Author> _authorRepository;
         private readonly IMapper _mapper;
 
-        public EducationalMaterialController(IBaseRepository<EducationalMaterial> educationalMaterialRepository, IBaseRepository<MaterialReview> reviewRepository, IBaseRepository<MaterialReview> materialReviewRepository, IBaseRepository<Author> authorRepository, IMapper mapper)
+        public EducationalMaterialController(IBaseRepository<EducationalMaterial> educationalMaterialRepository, IBaseRepository<MaterialReview> reviewRepository, IBaseRepository<MaterialReview> materialReviewRepository, IMapper mapper)
         {
             _educationalMaterialRepository = educationalMaterialRepository;
             _reviewRepository = reviewRepository;
             _materialReviewRepository = materialReviewRepository;
-            _authorRepository = authorRepository;
             _mapper = mapper;
         }
 
@@ -41,7 +39,7 @@ namespace ExamApi.Controllers
 
 
         [HttpGet("{id}")]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin, User")]
 
         public async Task<IActionResult> GetEducationalMaterialById(int id)
         {
@@ -102,7 +100,7 @@ namespace ExamApi.Controllers
         }
 
         [HttpGet("EducationalElementsByMaterialTypeId/{TypeId}")]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin, User")]
 
         public async Task<IActionResult> GetAllEducationalMaterialByType(int TypeId)
         {
@@ -113,7 +111,7 @@ namespace ExamApi.Controllers
 
 
         [HttpGet("EducationalElementsForGivenAuthor/{authorId}")]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin, User")]
 
         public async Task<IActionResult> GetAllMaterialsForGivenAuthor(int authorId)
         {
@@ -123,6 +121,7 @@ namespace ExamApi.Controllers
         }
 
         [HttpPut("{id}/review/{reviewId}")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> AddReviewToEducationalMaterial(int id, int reviewId)
         {
             var educationalMaterial = await _educationalMaterialRepository.GetById(id);

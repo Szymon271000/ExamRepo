@@ -11,7 +11,6 @@ namespace ExamApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     [EnableCors(origins: "http://mywebclient.azurewebsites.net", headers: "*", methods: "*")]
 
     public class MaterialTypesController : ControllerBase
@@ -29,6 +28,7 @@ namespace ExamApi.Controllers
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin, User")]
         public async Task<IActionResult> GetAllMaterialTypes()
         {
             var materialTypes = await _materialTypeRepository.GetAll();
@@ -36,6 +36,7 @@ namespace ExamApi.Controllers
         }
 
         [HttpPut("{id}/materialTypes/{educationalMaterialId}")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> AddTypeToEducationalMaterial(int id, int educationalMaterialId)
         {
             var typelMaterial = await _materialTypeRepository.GetById(id);

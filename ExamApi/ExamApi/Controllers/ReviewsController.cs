@@ -2,6 +2,7 @@
 using Datas.Models;
 using Datas.Repositories;
 using ExamApi.DTOs.ReviewDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +27,7 @@ namespace ExamApi.Controllers
         }
 
         [HttpGet]
-
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin, User")]
         public async Task<IActionResult> GetAllReviewsMaterial()
         {
             var educationalMaterials = await _materialRepository.GetAll();
@@ -34,6 +35,7 @@ namespace ExamApi.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin, User")]
 
         public async Task<IActionResult> GetReviewById(int id)
         {
@@ -46,13 +48,13 @@ namespace ExamApi.Controllers
         }
 
         [HttpPost]
-
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin, User")]
         public async Task<IActionResult> CreateReview(ReviewToCreateDTO reviewDTO)
         {
             if (ModelState.IsValid)
             {
                 var reviewToAdd = _mapper.Map<MaterialReview>(reviewDTO);
-                _materialRepository.Add(reviewToAdd);
+                await _materialRepository.Add(reviewToAdd);
                 return Ok(_mapper.Map<SimpleReviewDTO>(reviewToAdd));
 
             }
@@ -61,6 +63,7 @@ namespace ExamApi.Controllers
 
 
         [HttpPatch("{id}")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin, User")]
         public async Task<ActionResult> PartialEntityUpdate(int id, JsonPatchDocument<ReviewToUpdateDTO> patchDoc)
         {
             var modelFromRepo = await _materialRepository.GetById(id);
@@ -81,6 +84,7 @@ namespace ExamApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> Remove(int id)
         {
             var result = await _materialRepository.GetById(id);
